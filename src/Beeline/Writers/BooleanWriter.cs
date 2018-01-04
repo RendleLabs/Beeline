@@ -9,25 +9,23 @@ namespace Beeline.Writers
     {
         private static readonly byte[] TrueString = Encoding.UTF8.GetBytes("true");
         private static readonly byte[] FalseString = Encoding.UTF8.GetBytes("false");
-        public static Func<DbDataReader, byte[], int, int> Make(int index, byte[] nameBytes)
+        public static Writer Make(int index, NameWriter name)
         {
             return (reader, buffer, pos) =>
             {
                 if (reader.IsDBNull(index)) return pos;
                 
                 Comma.Write(buffer, ref pos);
-
-                nameBytes.CopyTo(buffer, pos);
-                pos += nameBytes.Length;
+                name.Write(buffer, ref pos);
 
                 if (reader.GetBoolean(index))
                 {
-                    TrueString.CopyTo(buffer, pos);
+                    TrueString.CopyTo(buffer.Slice(pos, 4));
                     pos += 4;
                 }
                 else
                 {
-                    FalseString.CopyTo(buffer, pos);
+                    FalseString.CopyTo(buffer.Slice(pos, 5));
                     pos += 5;
                 }
 

@@ -6,11 +6,13 @@ using System.Text;
 
 namespace Beeline.Writers
 {
+    public delegate int Writer(DbDataReader reader, Span<byte> buffer, int pos);
+    
     public class FieldWriters
     {
-        private static readonly ReadOnlyDictionary<Type, Func<int, byte[], Func<DbDataReader, byte[], int, int>>> Makers =
-            new ReadOnlyDictionary<Type, Func<int, byte[], Func<DbDataReader, byte[], int, int>>>(
-                new Dictionary<Type, Func<int, byte[], Func<DbDataReader, byte[], int, int>>>
+        private static readonly ReadOnlyDictionary<Type, Func<int, NameWriter, Writer>> Makers =
+            new ReadOnlyDictionary<Type, Func<int, NameWriter, Writer>>(
+                new Dictionary<Type, Func<int, NameWriter, Writer>>
                 {
                     { typeof(bool), BooleanWriter.Make },
                     { typeof(byte), ByteWriter.Make },
@@ -28,7 +30,7 @@ namespace Beeline.Writers
                 });
         
         private readonly Func<string, string> _nameFormatter;
-
+        
         public FieldWriters() : this(name => name)
         {
             
@@ -51,12 +53,11 @@ namespace Beeline.Writers
             _nameFormatter = nameFormatter ?? throw new ArgumentNullException(nameof(nameFormatter));
         }
 
-        public Func<DbDataReader, byte[], int, int> Make(int index, Type columnType, string name)
+        public Writer Make(int index, Type columnType, string name)
         {
             name = _nameFormatter(name);
-            var nameBytes = Encoding.UTF8.GetBytes($"\"{name}\": ");
 
-            return Makers.TryGetValue(columnType, out var maker) ? maker(index, nameBytes) : null;
+            return Makers.TryGetValue(columnType, out var maker) ? maker(index, new NameWriter(name)) : null;
         }
     }
 }

@@ -11,7 +11,7 @@ namespace Beeline.Tests
     public class SqlServerTests
     {
         [Fact]
-        public async Task CreatesSerializerForSqlDataReader()
+        public async Task SqlDataReader_RowSerializer_Works()
         {
             int written = 0;
             byte[] buffer = new byte[8192];
@@ -23,7 +23,7 @@ namespace Beeline.Tests
                 await cn.OpenAsync();
                 using (var reader = await cmd.ExecuteReaderAsync())
                 {
-                    var actual = DbDataReaderToJsonSerializer.For(reader);
+                    var actual = RowSerializer.For(reader);
                     while (await reader.ReadAsync())
                     {
                         written = actual.Write(reader, buffer);
@@ -39,7 +39,7 @@ namespace Beeline.Tests
             Assert.Equal(12345, jobj.Value<short>("ShortValue"));
             Assert.Equal(123456789, jobj.Value<long>("LongValue"));
             Assert.Equal(12345678m, jobj.Value<decimal>("DecimalValue"));
-            Assert.InRange(jobj.Value<double>("FloatValue"), 12345678d, 12345679d);
+            Assert.InRange(jobj.Value<double>("FloatValue"), 12345678d, 12345679d); // Serializer doesn't do all the digits
             Assert.Equal(new DateTime(2018, 1, 4, 0, 0, 0), jobj.Value<DateTime>("DateTimeValue"));
             Assert.Equal(new DateTime(2018, 1, 4, 0, 0, 0), jobj.Value<DateTime>("DateTime2Value"));
             Assert.Equal(new DateTimeOffset(2018, 1, 4, 0, 0, 0, TimeSpan.Zero), jobj.Value<DateTime>("DateTimeOffsetValue"));

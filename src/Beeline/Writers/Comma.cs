@@ -1,4 +1,5 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace Beeline.Writers
@@ -10,6 +11,14 @@ namespace Beeline.Writers
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void Write(byte[] buffer, ref int pos)
+        {
+            if (pos == 2) return;
+            buffer[pos++] = CommaByte;
+            buffer[pos++] = SpaceByte;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void Write(Span<byte> buffer, ref int pos)
         {
             if (pos == 2) return;
             buffer[pos++] = CommaByte;
