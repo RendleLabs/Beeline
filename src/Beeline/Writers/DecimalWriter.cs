@@ -4,7 +4,7 @@ using System.Data.Common;
 
 namespace Beeline.Writers
 {
-    public static class Int32Writer
+    public static class DecimalWriter
     {
         public static Func<DbDataReader, byte[], int, int> Make(int index, byte[] nameBytes)
         {
@@ -16,7 +16,7 @@ namespace Beeline.Writers
 
                 nameBytes.CopyTo(buffer, pos);
                 pos += nameBytes.Length;
-                Utf8Formatter.TryFormat(reader.GetInt32(index), new Span<byte>(buffer, pos, 16), out var n);
+                Utf8Formatter.TryFormat(reader.GetDecimal(index), new Span<byte>(buffer, pos, 32), out var n);
 
                 return pos + n;
             };

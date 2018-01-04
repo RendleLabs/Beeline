@@ -4,7 +4,7 @@ using System.Data.Common;
 
 namespace Beeline.Writers
 {
-    public static class Int32Writer
+    public static class DoubleWriter
     {
         public static Func<DbDataReader, byte[], int, int> Make(int index, byte[] nameBytes)
         {
@@ -16,7 +16,8 @@ namespace Beeline.Writers
 
                 nameBytes.CopyTo(buffer, pos);
                 pos += nameBytes.Length;
-                Utf8Formatter.TryFormat(reader.GetInt32(index), new Span<byte>(buffer, pos, 16), out var n);
+                var value = reader.GetDouble(index);
+                Utf8Formatter.TryFormat(value, new Span<byte>(buffer, pos, 128), out var n);
 
                 return pos + n;
             };

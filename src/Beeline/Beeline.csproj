@@ -9,4 +9,9 @@
     <PackageReference Include="Microsoft.Net.Compilers" Version="2.6.1" />
     <PackageReference Include="System.Buffers" Version="4.4.0" />
   </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System.Data.SqlClient, Version=4.2.0.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <HintPath>..\..\..\..\Users\mark\.nuget\packages\system.data.sqlclient\4.4.2\ref\netstandard2.0\System.Data.SqlClient.dll</HintPath>
+    </Reference>
+  </ItemGroup>
 </Project>

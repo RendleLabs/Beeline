@@ -37,9 +37,17 @@ namespace Beeline
             return pos + 2;
         }
 
-        public static DbDataReaderToJsonSerializer For(DbDataReader reader, bool camelCase)
+        public static DbDataReaderToJsonSerializer For(DbDataReader reader) => For(reader, name => name);
+
+        public static DbDataReaderToJsonSerializer For(DbDataReader reader, bool camelCase) => camelCase
+            ? For(reader, name => char.ToLowerInvariant(name[0]) + name.Substring(1))
+            : For(reader, name => name);
+
+        public static DbDataReaderToJsonSerializer For(DbDataReader reader, Func<string, string> nameFormatter)
         {
-            var fieldWriters = new FieldWriters(camelCase);
+            if (nameFormatter == null) throw new ArgumentNullException(nameof(nameFormatter));
+            
+            var fieldWriters = new FieldWriters(nameFormatter);
             var writers = new Func<DbDataReader, byte[], int, int>[reader.FieldCount];
             
             for (int i = 0; i < reader.FieldCount; i++)
