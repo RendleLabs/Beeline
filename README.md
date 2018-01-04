@@ -101,7 +101,8 @@ whatever.
 ## Other Notes
 
 - I've been working on this in Rider 2017.3 and it puts red squiggles all over
-the uses of `Span<T>`, but everything seems to build and run OK. VS Code has the same
-squiggles. Haven't tried it in VS2017.
+the uses of `Span<T>`, and tells you the `Span` property of `Memory<T>` is get-only
+when you write to it using the indexer, but everything seems to build and run OK.
+VS Code has the same squiggles. Haven't tried it in VS2017.
 - If you want to comment on this project without opening an issue, you can
 [find me on Twitter](https://twitter.com/markrendle).
