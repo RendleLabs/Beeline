@@ -1,4 +1,5 @@
-﻿using System.Buffers;
+﻿using System;
+using System.Buffers;
 using System.Data.Common;
 using System.IO;
 using System.Threading;
@@ -15,6 +16,17 @@ namespace Beeline
         {
             _serializer = serializer;
             _bufferSize = bufferSize;
+        }
+        
+        public async Task<int> WriteSingle(DbDataReader reader, Memory<byte> buffer, CancellationToken ct = default)
+        {
+            if (await reader.ReadAsync(ct).ConfigureAwait(false))
+            {
+                int bytes = _serializer.Write(reader, buffer.Span);
+                return 1;
+            }
+
+            return 0;
         }
 
         public async Task<int> WriteSingle(DbDataReader reader, Stream stream, CancellationToken ct = default)
