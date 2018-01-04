@@ -56,7 +56,7 @@ And this isn't for incoming data, just for queries.
 
 The cost of constructing the `RowSerializer` type is non-trival,
 so you'd want to do it once and then hang onto the result. It's stateless and
-thread-safe, I think
+so should be thread-safe (I think).
 
 So what you'd probably have is something like this:
 
