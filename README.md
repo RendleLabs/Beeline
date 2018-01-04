@@ -37,6 +37,10 @@ a bunch of things that could be done to improve performance, like using runtime
 codegen instead of the Writer funcs, and probably some other stuff that I don't
 even know about because I'm an imposter (don't tell anyone).
 
+### You need to know in advance the maximum size of the JSON for a row
+
+It's using buffers from `ArrayPool<T>` so it needs to know how big to make them.
+
 ### I haven't even benchmarked this yet
 
 That's the next thing on my list, promise.
