@@ -104,6 +104,7 @@ whatever.
 
 ## Other Notes
 
+- There's no escaping of characters when serializing strings, that's still `//TODO`.
 - I've been working on this in Rider 2017.3 and it puts red squiggles all over
 the uses of `Span<T>`, and tells you the `Span` property of `Memory<T>` is get-only
 when you write to it using the indexer, but everything seems to build and run OK.
