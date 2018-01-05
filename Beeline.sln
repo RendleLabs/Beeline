@@ -11,6 +11,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{D20967AB-9
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Beeline.Tests", "test\Beeline.Tests\Beeline.Tests.csproj", "{EBD6AEB9-1E0B-4651-83CD-5D4956C19EA3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Beeline.Benchmarks", "test\Beeline.Benchmarks\Beeline.Benchmarks.csproj", "{0045104E-E9BC-4566-8324-3D1E4099CD6E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -48,9 +50,22 @@ Global
 		{EBD6AEB9-1E0B-4651-83CD-5D4956C19EA3}.Release|x64.Build.0 = Release|x64
 		{EBD6AEB9-1E0B-4651-83CD-5D4956C19EA3}.Release|x86.ActiveCfg = Release|x86
 		{EBD6AEB9-1E0B-4651-83CD-5D4956C19EA3}.Release|x86.Build.0 = Release|x86
+		{0045104E-E9BC-4566-8324-3D1E4099CD6E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0045104E-E9BC-4566-8324-3D1E4099CD6E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0045104E-E9BC-4566-8324-3D1E4099CD6E}.Debug|x64.ActiveCfg = Debug|x64
+		{0045104E-E9BC-4566-8324-3D1E4099CD6E}.Debug|x64.Build.0 = Debug|x64
+		{0045104E-E9BC-4566-8324-3D1E4099CD6E}.Debug|x86.ActiveCfg = Debug|x86
+		{0045104E-E9BC-4566-8324-3D1E4099CD6E}.Debug|x86.Build.0 = Debug|x86
+		{0045104E-E9BC-4566-8324-3D1E4099CD6E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0045104E-E9BC-4566-8324-3D1E4099CD6E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0045104E-E9BC-4566-8324-3D1E4099CD6E}.Release|x64.ActiveCfg = Release|x64
+		{0045104E-E9BC-4566-8324-3D1E4099CD6E}.Release|x64.Build.0 = Release|x64
+		{0045104E-E9BC-4566-8324-3D1E4099CD6E}.Release|x86.ActiveCfg = Release|x86
+		{0045104E-E9BC-4566-8324-3D1E4099CD6E}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{B7F309C8-75FC-41FE-BF10-32B727AF9EB4} = {FD1C9140-EAE4-4C8B-8B93-985C07992FF7}
 		{EBD6AEB9-1E0B-4651-83CD-5D4956C19EA3} = {D20967AB-999E-44C6-9F01-BF0638F12D1E}
+		{0045104E-E9BC-4566-8324-3D1E4099CD6E} = {D20967AB-999E-44C6-9F01-BF0638F12D1E}
 	EndGlobalSection
 EndGlobal
