@@ -37,6 +37,10 @@ a bunch of things that could be done to improve performance, like using runtime
 codegen instead of the Writer funcs, and probably some other stuff that I don't
 even know about because I'm an imposter (don't tell anyone).
 
+### You need to know in advance the maximum size of the JSON for a row
+
+It's using buffers from `ArrayPool<T>` so it needs to know how big to make them.
+
 ### I haven't even benchmarked this yet
 
 That's the next thing on my list, promise.
@@ -52,7 +56,7 @@ And this isn't for incoming data, just for queries.
 
 The cost of constructing the `RowSerializer` type is non-trival,
 so you'd want to do it once and then hang onto the result. It's stateless and
-thread-safe, I think
+so should be thread-safe (I think).
 
 So what you'd probably have is something like this:
 
@@ -100,8 +104,10 @@ whatever.
 
 ## Other Notes
 
+- There's no escaping of characters when serializing strings, that's still `//TODO`.
 - I've been working on this in Rider 2017.3 and it puts red squiggles all over
-the uses of `Span<T>`, but everything seems to build and run OK. VS Code has the same
-squiggles. Haven't tried it in VS2017.
+the uses of `Span<T>`, and tells you the `Span` property of `Memory<T>` is get-only
+when you write to it using the indexer, but everything seems to build and run OK.
+VS Code has the same squiggles. Haven't tried it in VS2017.
 - If you want to comment on this project without opening an issue, you can
 [find me on Twitter](https://twitter.com/markrendle).
