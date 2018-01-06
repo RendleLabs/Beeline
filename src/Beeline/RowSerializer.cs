@@ -22,24 +22,24 @@ namespace Beeline
 
         public int Write(DbDataReader reader, Span<byte> buffer)
         {
+            var firstTwoBytes = buffer.Slice(0, 2);
             var currentBufferSize = buffer.Length;
-            OpenSpace.AsReadOnlySpan().CopyTo(buffer);
 
-            buffer = buffer.Slice(2);
             for (int i = 0, l = _writers.Length; i < l; i++)
             {
                 if (reader.IsDBNull(i) || _writers[i] == null) continue;
                 buffer = _writers[i](reader, buffer);
             }
 
-            if (currentBufferSize - buffer.Length  == 2)
+            if (currentBufferSize - buffer.Length  == 0)
             {
                 return 0;
             }
 
+            OpenSpace.AsReadOnlySpan().CopyTo(firstTwoBytes);
             SpaceClose.AsSpan().CopyTo(buffer);
-            
-            return (currentBufferSize - buffer.Length ) + 2;
+
+            return (currentBufferSize - buffer.Length) + 2;
         }
 
         public static RowSerializer For(DbDataReader reader) => For(reader, name => name);
