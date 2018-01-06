@@ -12,18 +12,19 @@ namespace Beeline.Writers
         
         public static Writer Make(int index, NameWriter name)
         {
-            return (reader, buffer, pos) =>
+            return (reader, buffer) =>
             {
-                if (reader.IsDBNull(index)) return pos;
+                if (reader.IsDBNull(index)) return buffer;
                 
-                Comma.Write(buffer, ref pos);
-                name.Write(buffer, ref pos);
+                Comma.Write(ref buffer);
+                name.Write(ref buffer);
 
-                buffer[pos++] = QuotationMark;
-                Utf8Formatter.TryFormat(reader.GetDateTime(index), buffer.Slice(pos, 32), out var n, new StandardFormat('O'));
-                pos = pos + n;
-                buffer[pos] = QuotationMark;
-                return pos + 1;
+                buffer[0] = QuotationMark;
+                buffer = buffer.Slice(1);
+                Utf8Formatter.TryFormat(reader.GetDateTime(index), buffer, out var n, new StandardFormat('O'));
+
+                buffer[n] = QuotationMark;
+                return buffer.Slice(n + 1);
             };
         }
     }

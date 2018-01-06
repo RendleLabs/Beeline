@@ -16,10 +16,10 @@ namespace Beeline.Writers
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void Write(Span<byte> buffer, ref int pos)
+        public void Write(ref Span<byte> buffer)
         {
-            _bytes.CopyTo(buffer.Slice(pos, _length));
-            pos += _length;
+            _bytes.CopyTo(buffer);
+            buffer = buffer.Slice(_length);
         }
     }
 }

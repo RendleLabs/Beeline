@@ -10,12 +10,12 @@ namespace Beeline.Writers
         private static readonly byte[] EmptyString = Encoding.UTF8.GetBytes("\"\"");
         public static Writer Make(int index, NameWriter name)
         {
-            return (reader, buffer, pos) =>
+            return (reader, buffer) =>
             {
-                if (reader.IsDBNull(index)) return pos;
+                if (reader.IsDBNull(index)) return buffer;
                 
-                Comma.Write(buffer, ref pos);
-                name.Write(buffer, ref pos);
+                Comma.Write(ref buffer);
+                name.Write(ref buffer);
 
                 var chars = ArrayPool<char>.Shared.Rent(1024);
                 try
@@ -23,17 +23,16 @@ namespace Beeline.Writers
                     int charCount = (int) reader.GetChars(index, 0, chars, 1, 1000);
                     if (charCount == 0)
                     {
-                        EmptyString.CopyTo(buffer.Slice(pos, 2));
-                        return pos + 2;
+                        EmptyString.CopyTo(buffer);
+                        return buffer.Slice(2);
                     }
                     
                     chars[0] = '"';
                     chars[charCount + 1] = '"';
                     charCount += 2;
                     var source = new ReadOnlySpan<char>(chars, 0, charCount);
-                    var target = buffer.Slice(pos);
-                    var byteCount = Encoding.UTF8.GetBytes(source, target);
-                    return pos + byteCount;
+                    var byteCount = Encoding.UTF8.GetBytes(source, buffer);
+                    return buffer.Slice(byteCount);
                 }
                 finally
                 {
