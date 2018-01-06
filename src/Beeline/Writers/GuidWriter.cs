@@ -8,21 +8,21 @@ namespace Beeline.Writers
     public static class GuidWriter
     {
         private const byte QuotationMark = 34;
-        
+
         public static Writer Make(int index, NameWriter name)
         {
-            return (reader, buffer, pos) =>
+            return (reader, buffer) =>
             {
-                if (reader.IsDBNull(index)) return pos;
-                
-                Comma.Write(buffer, ref pos);
-                name.Write(buffer, ref pos);
+                if (reader.IsDBNull(index)) return buffer;
 
-                buffer[pos++] = QuotationMark;
-                Utf8Formatter.TryFormat(reader.GetFieldValue<Guid>(index), buffer.Slice(pos, 32), out var n, new StandardFormat('O'));
-                pos = pos + n;
-                buffer[pos] = QuotationMark;
-                return pos + 1;
+                Comma.Write(ref buffer);
+                name.Write(ref buffer);
+
+                buffer[0] = QuotationMark;
+                buffer = buffer.Slice(1);
+                Utf8Formatter.TryFormat(reader.GetFieldValue<Guid>(index), buffer, out var n, new StandardFormat('O'));
+                buffer[n] = QuotationMark;
+                return buffer.Slice(n + 1);
             };
         }
     }

@@ -18,11 +18,11 @@ namespace Beeline.Writers
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void Write(Span<byte> buffer, ref int pos)
+        public static void Write(ref Span<byte> buffer)
         {
-            if (pos == 2) return;
-            buffer[pos++] = CommaByte;
-            buffer[pos++] = SpaceByte;
+            buffer[0] = CommaByte;
+            buffer[1] = SpaceByte;
+            buffer = buffer.Slice(2);
         }
     }
 }

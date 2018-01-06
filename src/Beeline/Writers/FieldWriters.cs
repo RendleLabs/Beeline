@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Beeline.Writers
 {
-    public delegate int Writer(DbDataReader reader, Span<byte> buffer, int pos);
+    public delegate Span<byte> Writer(DbDataReader reader, Span<byte> buffer);
     
     public class FieldWriters
     {

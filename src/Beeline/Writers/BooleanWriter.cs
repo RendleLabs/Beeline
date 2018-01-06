@@ -11,25 +11,25 @@ namespace Beeline.Writers
         private static readonly byte[] FalseString = Encoding.UTF8.GetBytes("false");
         public static Writer Make(int index, NameWriter name)
         {
-            return (reader, buffer, pos) =>
+            return (reader, buffer) =>
             {
-                if (reader.IsDBNull(index)) return pos;
+                if (reader.IsDBNull(index)) return buffer;
                 
-                Comma.Write(buffer, ref pos);
-                name.Write(buffer, ref pos);
+                Comma.Write(ref buffer);
+                name.Write(ref buffer);
 
                 if (reader.GetBoolean(index))
                 {
-                    TrueString.CopyTo(buffer.Slice(pos, 4));
-                    pos += 4;
+                    TrueString.CopyTo(buffer);
+                    buffer = buffer.Slice(4);
                 }
                 else
                 {
-                    FalseString.CopyTo(buffer.Slice(pos, 5));
-                    pos += 5;
+                    FalseString.CopyTo(buffer);
+                    buffer = buffer.Slice(5);
                 }
 
-                return pos;
+                return buffer;
             };
         }
     }

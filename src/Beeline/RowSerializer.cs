@@ -10,6 +10,9 @@ namespace Beeline
         private const byte Space = 32;
         private const byte OpenBrace = 123;
         private const byte CloseBrace = 125;
+
+        private static readonly byte[] OpenSpace = new byte[] { OpenBrace, Space };
+        private static readonly byte[] SpaceClose = new byte[] { Space, CloseBrace };
         private readonly Writer[] _writers;
 
         private RowSerializer(Writer[] writers)
@@ -19,24 +22,24 @@ namespace Beeline
 
         public int Write(DbDataReader reader, Span<byte> buffer)
         {
-            buffer[0] = OpenBrace;
-            buffer[1] = Space;
-            int pos = 2;
+            var currentBufferSize = buffer.Length;
+            OpenSpace.AsReadOnlySpan().CopyTo(buffer);
+
+            buffer = buffer.Slice(2);
             for (int i = 0, l = _writers.Length; i < l; i++)
             {
                 if (reader.IsDBNull(i) || _writers[i] == null) continue;
-                pos = _writers[i](reader, buffer, pos);
+                buffer = _writers[i](reader, buffer);
             }
 
-            if (pos == 2)
+            if (currentBufferSize - buffer.Length  == 2)
             {
                 return 0;
             }
 
-            buffer[pos++] = Space;
-            buffer[pos++] = CloseBrace;
-
-            return pos;
+            SpaceClose.AsSpan().CopyTo(buffer);
+            
+            return (currentBufferSize - buffer.Length ) + 2;
         }
 
         public static RowSerializer For(DbDataReader reader) => For(reader, name => name);
@@ -48,10 +51,10 @@ namespace Beeline
         public static RowSerializer For(DbDataReader reader, Func<string, string> nameFormatter)
         {
             if (nameFormatter == null) throw new ArgumentNullException(nameof(nameFormatter));
-            
+
             var fieldWriters = new FieldWriters(nameFormatter);
             var writers = new Writer[reader.FieldCount];
-            
+
             for (int i = 0; i < reader.FieldCount; i++)
             {
                 writers[i] = fieldWriters.Make(i, reader.GetFieldType(i), reader.GetName(i));

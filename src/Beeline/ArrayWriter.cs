@@ -13,7 +13,7 @@ namespace Beeline
         private const byte CloseBracket = 93;
         private const byte Comma = 44;
         private const byte Newline = 10;
-        
+
         private readonly RowSerializer _serializer;
         private readonly int _bufferSize;
 
@@ -29,14 +29,16 @@ namespace Beeline
             int pos = 0;
             bool first = true;
             buffer.Span[pos++] = OpenBracket;
-            
+
+            if (!await reader.ReadAsync(ct).ConfigureAwait(false)) return 0;
+
+            pos += _serializer.Write(reader, buffer.Span.Slice(pos, _bufferSize));
+            rowCount++;
+
             while (await reader.ReadAsync(ct).ConfigureAwait(false))
             {
-                if (rowCount > 0)
-                {
-                    buffer.Span[pos++] = Comma;
-                    buffer.Span[pos++] = Newline;
-                }
+                buffer.Span[pos++] = Comma;
+                buffer.Span[pos++] = Newline;
                 pos += _serializer.Write(reader, buffer.Span.Slice(pos, _bufferSize));
                 rowCount++;
             }
@@ -50,17 +52,20 @@ namespace Beeline
             int rowCount = 0;
             var buffer = ArrayPool<byte>.Shared.Rent(_bufferSize);
             stream.WriteByte(OpenBracket);
-            
+
             try
             {
+                if (!await reader.ReadAsync(ct).ConfigureAwait(false)) return 0;
+
+                int bytes = _serializer.Write(reader, buffer);
+                await stream.WriteAsync(buffer, 0, bytes, ct).ConfigureAwait(false);
+                rowCount++;
+
                 while (await reader.ReadAsync(ct).ConfigureAwait(false))
                 {
-                    if (rowCount > 0)
-                    {
-                        stream.WriteByte(Comma);
-                        stream.WriteByte(Newline);
-                    }
-                    int bytes = _serializer.Write(reader, buffer);
+                    stream.WriteByte(Comma);
+                    stream.WriteByte(Newline);
+                    bytes = _serializer.Write(reader, buffer);
                     await stream.WriteAsync(buffer, 0, bytes, ct).ConfigureAwait(false);
                     rowCount++;
                 }

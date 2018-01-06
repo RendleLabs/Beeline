@@ -8,16 +8,16 @@ namespace Beeline.Writers
     {
         public static Writer Make(int index, NameWriter name)
         {
-            return (reader, buffer, pos) =>
+            return (reader, buffer) =>
             {
-                if (reader.IsDBNull(index)) return pos;
+                if (reader.IsDBNull(index)) return buffer;
                 
-                Comma.Write(buffer, ref pos);
-                name.Write(buffer, ref pos);
+                Comma.Write(ref buffer);
+                name.Write(ref buffer);
 
-                Utf8Formatter.TryFormat(reader.GetInt64(index), buffer.Slice(pos, 32), out var n);
+                Utf8Formatter.TryFormat(reader.GetInt64(index), buffer, out var n);
 
-                return pos + n;
+                return buffer.Slice(n);
             };
         }
     }
