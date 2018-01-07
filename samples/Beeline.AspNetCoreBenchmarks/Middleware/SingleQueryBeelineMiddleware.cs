@@ -5,8 +5,6 @@ using Beeline.AspNetCoreBenchmarks.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 
 namespace Beeline.AspNetCoreBenchmarks.Middleware
 {
@@ -48,7 +46,7 @@ namespace Beeline.AspNetCoreBenchmarks.Middleware
         }
     }
     
-    public static class SingleQueryDapperMiddlewareExtensions
+    public static class SingleQueryBeelineMiddlewareExtensions
     {
         public static IApplicationBuilder UseSingleQueryBeeline(this IApplicationBuilder builder)
         {

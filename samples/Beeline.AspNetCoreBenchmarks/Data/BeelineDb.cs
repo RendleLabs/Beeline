@@ -49,7 +49,7 @@ namespace Beeline.AspNetCoreBenchmarks.Data
         private static DbCommand CreateSingleQueryCommand(DbConnection db, int id)
         {
             var cmd = db.CreateCommand();
-            cmd.CommandText = "SELECT id, randomnumber FROM world WHERE id = @id";
+            cmd.CommandText = @"SELECT id ""Id"", randomnumber ""RandomNumber"" FROM world WHERE id = @id";
             var idParameter = cmd.CreateParameter();
             idParameter.ParameterName = "id";
             idParameter.DbType = DbType.Int32;

@@ -34,10 +34,12 @@ namespace Beeline.AspNetCoreBenchmarks
             services.AddSingleton<IRandom, DefaultRandom>();
             services.AddSingleton<DbProviderFactory>(NpgsqlFactory.Instance);
             services.AddSingleton<BeelineDb>();
+            services.AddSingleton<DapperDb>();
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            app.UseSingleQueryDapper();
             app.UseSingleQueryBeeline();
         }
     }
