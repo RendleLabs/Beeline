@@ -22,8 +22,7 @@ namespace Beeline
         {
             if (await reader.ReadAsync(ct).ConfigureAwait(false))
             {
-                int bytes = _serializer.Write(reader, buffer.Span);
-                return 1;
+                return _serializer.Write(reader, buffer.Span);
             }
 
             return 0;

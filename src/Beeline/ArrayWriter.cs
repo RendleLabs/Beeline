@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Buffers;
+using System.ComponentModel;
 using System.Data.Common;
 using System.IO;
 using System.Threading;
@@ -27,7 +28,6 @@ namespace Beeline
         {
             int rowCount = 0;
             int pos = 0;
-            bool first = true;
             buffer.Span[pos++] = OpenBracket;
 
             if (!await reader.ReadAsync(ct).ConfigureAwait(false)) return 0;
